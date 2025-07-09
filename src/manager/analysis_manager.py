@@ -123,17 +123,15 @@ def parse_rankings_response(api_response: Dict[str, Any]) -> Optional[Dict[str, 
 
     encounter_name: Optional[str] = encounter_data.get('name')
     # The 'characterRankings' field returns a JSON string that needs to be parsed.
-    rankings_json_string: Optional[str] = encounter_data.get('characterRankings')
+    rankings_json_dict: Dict[str, Any] = encounter_data.get('characterRankings')
 
-    if not rankings_json_string:
+    if not rankings_json_dict:
         print("No character rankings found in the API response.")
         return None
 
     try:
-        # Parse the JSON string within 'characterRankings'
-        parsed_rankings: Dict[str, Any] = rankings_json_string
         # Get the list of ranks and limit to the top 10.
-        ranks: List[Dict[str, Any]] = parsed_rankings.get('rankings', [])[:10]
+        ranks: List[Dict[str, Any]] = rankings_json_dict.get('rankings', [])[:10]
         return {"encounter_name": encounter_name, "rankings": ranks}
     except json.JSONDecodeError:
         print("Error decoding characterRankings JSON string.")
