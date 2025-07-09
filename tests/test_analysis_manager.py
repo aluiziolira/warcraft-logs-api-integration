@@ -72,7 +72,7 @@ def test_get_access_token_missing_env_vars():
 def test_get_dps_rankings_success():
     mock_response = MagicMock()
     mock_response.status_code = 200
-    mock_response.json.return_value = {"data": {"worldData": {"encounter": {"name": "Test Boss", "characterRankings": "{\"rankings\": [{\"name\": \"Player1\"}]}"}}}} # Note: characterRankings is a JSON string
+    mock_response.json.return_value = {"data": {"worldData": {"encounter": {"name": "Test Boss", "characterRankings": '{"rankings": [{"name": "Player1"}]}'}}}} # Note: characterRankings is a JSON string
     mock_response.raise_for_status.return_value = None
 
     with patch('requests.post', return_value=mock_response) as mock_post:
@@ -161,10 +161,10 @@ def test_format_rankings_as_markdown_success():
     ]
     markdown = format_rankings_as_markdown("Test Encounter", rankings_data)
     assert "## Top 2 DPS Rankings for Test Encounter (Mythic)" in markdown
-    assert "| Rank | Player | DPS | Class | Spec | Guild | Server | Report |" in markdown
-    assert "|---|---|---|---|---|---|---|---|" in markdown
-    assert "| 1 | PlayerA | 12345.67 | Warrior | Fury | GuildA | ServerA | abc1 |" in markdown
-    assert "| 2 | PlayerB | 9876.54 | Mage | Fire | GuildB | ServerB | def2 |" in markdown
+    assert "Rank | Player | DPS | Class | Spec | Guild | Server | Report" in markdown
+    assert "--- | --- | --- | --- | --- | --- | --- | ---" in markdown # Corrected separator
+    assert "1 | PlayerA | 12345.67 | Warrior | Fury | GuildA | ServerA | abc1" in markdown
+    assert "2 | PlayerB | 9876.54 | Mage | Fire | GuildB | ServerB | def2" in markdown
 
 def test_format_rankings_as_markdown_empty_rankings():
     markdown = format_rankings_as_markdown("Test Encounter", [])
@@ -187,19 +187,19 @@ def test_save_markdown_output_io_error():
 
 # --- Tests for main function ---
 
-@patch('src.manager.analysis_manager.get_access_token')
-@patch('src.manager.analysis_manager.get_dps_rankings')
-@patch('src.manager.analysis_manager.parse_rankings_response')
-@patch('src.manager.analysis_manager.format_rankings_as_markdown')
 @patch('src.manager.analysis_manager.save_markdown_output')
+@patch('src.manager.analysis_manager.format_rankings_as_markdown')
+@patch('src.manager.analysis_manager.parse_rankings_response')
+@patch('src.manager.analysis_manager.get_dps_rankings')
+@patch('src.manager.analysis_manager.get_access_token')
 @patch('src.manager.analysis_manager.CLIENT_ID', "mock_client_id")
 @patch('src.manager.analysis_manager.CLIENT_SECRET', "mock_client_secret")
 def test_main_success(
-    mock_save_markdown_output,
-    mock_format_rankings_as_markdown,
-    mock_parse_rankings_response,
+    mock_get_access_token,
     mock_get_dps_rankings,
-    mock_get_access_token
+    mock_parse_rankings_response,
+    mock_format_rankings_as_markdown,
+    mock_save_markdown_output
 ):
     mock_get_access_token.return_value = "mock_token"
     mock_get_dps_rankings.return_value = {"data": {"worldData": {"encounter": {"name": "Test Boss", "characterRankings": '{"rankings": []}'}}}} # Simplified response
@@ -214,25 +214,25 @@ def test_main_success(
     mock_format_rankings_as_markdown.assert_called_once_with("Test Boss", [])
     mock_save_markdown_output.assert_called_once_with("# Mock Markdown")
 
-@patch('src.manager.analysis_manager.get_access_token', return_value=None)
 @patch('builtins.print')
-def test_main_no_access_token(mock_print):
+@patch('src.manager.analysis_manager.get_access_token', return_value=None)
+def test_main_no_access_token(mock_get_access_token, mock_print):
     main()
     mock_print.assert_any_call("Getting access token...")
     mock_print.assert_any_call("Failed to obtain access token. Please check your credentials.")
 
-@patch('src.manager.analysis_manager.get_access_token', return_value="mock_token")
-@patch('src.manager.analysis_manager.get_dps_rankings', return_value=None)
 @patch('builtins.print')
-def test_main_no_dps_rankings(mock_print):
+@patch('src.manager.analysis_manager.get_dps_rankings', return_value=None)
+@patch('src.manager.analysis_manager.get_access_token', return_value="mock_token")
+def test_main_no_dps_rankings(mock_get_access_token, mock_get_dps_rankings, mock_print):
     main()
     mock_print.assert_any_call("Access token received. Fetching rankings...")
     mock_print.assert_any_call("Could not retrieve rankings data from the API.")
 
-@patch('src.manager.analysis_manager.get_access_token', return_value="mock_token")
-@patch('src.manager.analysis_manager.get_dps_rankings', return_value={'data': {}} ) # Invalid API response
-@patch('src.manager.analysis_manager.parse_rankings_response', return_value=None)
 @patch('builtins.print')
-def test_main_parse_rankings_failure(mock_print):
+@patch('src.manager.analysis_manager.parse_rankings_response', return_value=None)
+@patch('src.manager.analysis_manager.get_dps_rankings', return_value={'data': {}} ) # Invalid API response
+@patch('src.manager.analysis_manager.get_access_token', return_value="mock_token")
+def test_main_parse_rankings_failure(mock_get_access_token, mock_get_dps_rankings, mock_parse_rankings_response, mock_print):
     main()
     mock_print.assert_any_call("Failed to parse rankings data.")
