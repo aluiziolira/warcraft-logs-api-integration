@@ -1,8 +1,8 @@
-# warcraft_logs_api_integration
+# warcraft-logs-api-integration
 
-![Build Status](https://github.com/aluiziolira/warcraft_logs_api_integration/actions/workflows/ci.yml/badge.svg)
-![Coverage](https://codecov.io/gh/aluiziolira/warcraft_logs_api_integration/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN)
-![License](https://img.shields.io/badge/license-MIT-blue)
+![Build Status](https://github.com/aluiziolira/warcraft-logs-api-integration/actions/workflows/ci.yml/badge.svg)
+![Coverage](https://codecov.io/gh/aluiziolira/warcraft-logs-api-integration/branch/main/graph/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-yellow)
 
 ## Overview
 
@@ -35,8 +35,8 @@ To set up and run this project locally on your machine, follow the steps below:
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/SEU_USUARIO/warcraft_logs_api_integration.git
-    cd warcraft_logs_api_integration
+    git clone https://github.com/SEU_USUARIO/warcraft-logs-api-integration.git
+    cd warcraft-logs-api-integration
     ```
 2.  **Create and activate a virtual environment**:
     ```bash
