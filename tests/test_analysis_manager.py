@@ -4,15 +4,14 @@ import json
 import os
 
 # Import the functions from the module to be tested
+import requests
 from src.manager.analysis_manager import (
     get_access_token,
     get_dps_rankings,
     parse_rankings_response,
     format_rankings_as_markdown,
     save_markdown_output,
-    main,
-    CLIENT_ID, # Import for testing main
-    CLIENT_SECRET # Import for testing main
+    main
 )
 
 # Mock environment variables for consistent testing

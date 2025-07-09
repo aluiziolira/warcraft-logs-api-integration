@@ -1,4 +1,4 @@
-import pytest
+
 
 # Você precisará importar as classes e funções que deseja testar
 # from src.builder.api_calls_builder import ApiCallsBuilder
