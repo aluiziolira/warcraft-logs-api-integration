@@ -1,7 +1,7 @@
 # warcraft_logs_api_integration
 
-![Build Status](https://github.com/SEU_USUARIO/warcraft_logs_api_integration/actions/workflows/ci.yml/badge.svg)
-![Coverage](https://codecov.io/gh/SEU_USUARIO/warcraft_logs_api_integration/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN)
+![Build Status](https://github.com/aluiziolira/warcraft_logs_api_integration/actions/workflows/ci.yml/badge.svg)
+![Coverage](https://codecov.io/gh/aluiziolira/warcraft_logs_api_integration/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## Overview
