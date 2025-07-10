@@ -35,7 +35,7 @@ To set up and run this project locally on your machine, follow the steps below:
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/SEU_USUARIO/warcraft-logs-api-integration.git
+    git clone https://github.com/aluiziolira/warcraft-logs-api-integration.git
     cd warcraft-logs-api-integration
     ```
 2.  **Create and activate a virtual environment**:
